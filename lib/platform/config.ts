@@ -10,9 +10,9 @@ export const platform = {
 export const features = [
   {
     icon: MessageCircle,
-    title: "Bandeja Unificada",
+    title: "Conversaciones sin espera",
     description:
-      "Gestiona todas las interacciones con los clientes en un solo lugar",
+      "No gestionamos tickets, gestionamos conversaciones",
   },
   {
     icon: BarChart,
@@ -22,9 +22,9 @@ export const features = [
   },
   {
     icon: Users,
-    title: "Colaboración en Equipo",
+    title: "Multiples Medios",
     description:
-      "Trabaja en equipo y resuelve los problemas de los clientes más rápido",
+      "Puedes atender desde cualquier medio.",
   },
 ];
 
@@ -78,7 +78,7 @@ export const translations: Record<string, Translations> = {
         info: 'Info',
         origin: 'Origine',
         messages: 'Messages',
-        originalLanguage: 'Langue d\'origine',
+        originalLanguage: 'Langue d`origine',
         lastMessage: 'Dernier message',
         sender: 'Expéditeur',
         status: 'Statut',

@@ -11,7 +11,7 @@ import {
 import { z } from "zod";
 import { mistral } from "@ai-sdk/mistral"
 import { openai } from "@ai-sdk/openai"
-import { nanoid } from "@/lib/utils";
+import { cn, nanoid } from "@/lib/utils";
 import { SYSTEM_MESSAGE } from "../config";
 import { BotCard, AssistantMessage, LoadingMessage, UserMessage } from "@/components/chat/message";
 // import { getVehicleStatus, getBookingInfo, getVehicleDetail, getDriverProfile, searchDriver, getDriverRatings, getBookings, getZonaIluminadaServices } from "./functions";
@@ -19,8 +19,10 @@ import { BotCard, AssistantMessage, LoadingMessage, UserMessage } from "@/compon
 import { generateText } from "ai";
 import { useSupabaseUser } from "@/hooks/use-supabase-user";
 import { createClient } from '@/utils/supabase/server'; // Import the createClient function from the correct path
+import { getCategoryFromAgent, getSeverityFromAgent } from "./functions";
+import { Badge } from "@/components/ui/badge";
 
-const modelInstanceMistral = mistral('mistral-large-latest')
+// const modelInstanceMistral = mistral('mistral-large-latest')
 const modelInstanceOpenAI = openai('gpt-4o')
 
 async function submitUserMessage(content: string) {
@@ -42,7 +44,6 @@ async function submitUserMessage(content: string) {
 	});
 
 	const ui = await streamUI({
-		// model: modelInstanceMistral,
 		model: modelInstanceOpenAI,
 		system: SYSTEM_MESSAGE,
 		messages: aiState.get().messages.filter(m => m.role !== 'function'),
@@ -59,7 +60,6 @@ async function submitUserMessage(content: string) {
 					],
 				});
 			}
-			console.log(aiState.get().messages)
 			return <AssistantMessage content={content.trim()} />
 		},
 		tools: {
@@ -70,75 +70,76 @@ async function submitUserMessage(content: string) {
 					problem: z.string().describe('La descripción del problema entregada por el usuario')
 				}).required(),
 				generate: async function* ({ problem }) {
-					yield <LoadingMessage text={`Buscando...`} />
+					yield <LoadingMessage text={`Estableciendo la categoría..`} />
 
-					const response = await fetch(process.env.CODEGPT_API_URL, {
-						method: 'POST',
-						headers: {
-							'Accept': 'application/json',
-							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${process.env.CODEGPT_API_KEY}`,
-						},
-						body: JSON.stringify({
-							agentId: `${process.env.CODEGPT_AGENT_ID}`,
-							messages: aiState.get().messages,
-							stream: true,
-						}),
-					})
+					const category = await getCategoryFromAgent(aiState.get().messages)
 
-					const data = await response.json()
-
-					console.log(data)
-
-					aiState.done({
+					aiState.update({
 						...aiState.get(),
 						messages: [
 							...aiState.get().messages,
 							{
 								role: 'assistant',
-								content: `Problema Descrito: ${problem}`
+								content: `Problema: ${problem} - Categoría: ${category}`
 							},
 						]
 					})
 
 					return (
 						<BotCard>
-							<div className="text-red-300">Problema: {problem}</div>
+							<div className="flex flex-col gap-2 items-center justify-start">
+								<div className="flex flex-row gap-2 items-center">
+									<span className="font-semibold">Problema</span>
+									<span className="font-normal">{problem}</span>
+								</div>
+								<Badge variant={"outline"}>
+									Categoría: {category}
+								</Badge>
+							</div>
 						</BotCard>
 					)
 				}
-			}
-			// createSuggestion: {
-			// 	description: `Utiliza esta herramienta cada vez que necesites dar sugerencias
-			// 	al usuario de pasos que puede seguir para solucionar su problema de su mouse`.trim(),
-			// 	parameters: z.object({
-			// 		suggestion: z
-			// 			.string()
-			// 			.describe("La sugerencia entregada hasta ahora por el experto IT")
-			// 	}).required(),
-			// 	generate: async function* ({ suggestion }) {
-			// 		yield <LoadingMessage text={`Buscando...`} />
-			// 
-			// 		console.log(suggestion);
-			// 
-			// 		aiState.done({
-			// 			...aiState.get(),
-			// 			messages: [
-			// 				...aiState.get().messages,
-			// 				{
-			// 					role: 'assistant',
-			// 					content: `Mostrando información: ${suggestion}`
-			// 				},
-			// 			]
-			// 		})
-			// 
-			// 		return (
-			// 			<BotCard>
-			// 				<div className="text-red-300">Sugerencia: {suggestion}</div>
-			// 			</BotCard>
-			// 		)
-			// 	}
-			// },
+			},
+			problemSeverity: {
+				description: 'Utiliza esta herramienta para determinar la severidad del problema que describe el usuario.\
+				Ejemplos de severidad puede ser: 1/Bajo impacto, entre otros',
+				parameters: z.object({
+					problem: z.string().describe('La descripción del problema entregada por el usuario')
+				}).required(),
+				generate: async function* ({ problem }) {
+					yield <LoadingMessage text={`Estableciendo la severidad...`} />
+
+					const severity = await getSeverityFromAgent(aiState.get().messages)
+					const severityLevel = severity.split(" / ")[0]
+					const severityDescription = severity.split(" / ")[1]
+
+					aiState.update({
+						...aiState.get(),
+						messages: [
+							...aiState.get().messages,
+							{
+								role: 'assistant',
+								content: `Problema: ${problem} - Severity: ${severity}`
+							},
+						]
+					})
+
+					return (
+						<BotCard>
+							<div className="flex flex-col gap-2 items-center justify-start">
+								<div className="flex flex-row gap-2 items-center">
+									<span className="font-semibold">Problema</span>
+									<span className="font-normal">{problem}</span>
+								</div>
+								<span>{ severityDescription }</span>
+								<Badge variant={"outline"} className={cn('bg-white', severityLevel <= 2 ? 'bg-green-400' : 'bg-orange-400')}>
+									Severidad: NIVEL {severityLevel}
+								</Badge>
+							</div>
+						</BotCard>
+					)
+				}
+			},
 		},
 	})
 

@@ -13,6 +13,7 @@ import { useEnterSubmit } from '@/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { ArrowRight, PlusCircleIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getCategoryFromAgent, getSeverityFromAgent } from '@/lib/chat/functions'
 
 const SHOW_FILE_BUTTON = false
 
