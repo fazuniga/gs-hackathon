@@ -9,7 +9,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Support Sensei",
+  title: "eyeT | Your IT Buddy",
   description: "The best way to never need a ticket again",
 };
 

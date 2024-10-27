@@ -29,12 +29,7 @@ import {
 //     SidebarTrigger,
 // } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
-import { ThemeSwitcher } from '../theme-switcher'
 import { translations } from '@/lib/platform/config'
-import PlatformLogo from '../logo'
-import UserDetails from '../auth/user-details'
-import AuthButton from '../header-auth'
-import LogoutButton from '../auth/logout-button'
 import DashboardHeader from './header'
 import TicketManagement from './ticket-management'
 

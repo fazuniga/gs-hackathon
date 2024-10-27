@@ -11,6 +11,7 @@ import { MessagesList } from './messages-list'
 import { ChatPanel } from './chat-panel'
 import { EmptyScreen } from './empty-screen'
 import { ScrollArea } from '../ui/scroll-area'
+import { Metadata } from './metadata'
 // import { toast } from 'sonner'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -51,23 +52,30 @@ export function SupportChat({ id, className, session }: ChatProps) {
     const { messagesRef, scrollRef, visibilityRef, isAtBottom, scrollToBottom } = useScrollAnchor()
 
     return (
-        <div ref={scrollRef} className="flex flex-col size-full overflow-auto justify-between">
-            <div className={cn('flex-1 pb-[120px] overflow-auto max-h-[76vh]', className as string)} ref={messagesRef}>
-                <ScrollArea className='flex-grow p-0'>
-                    {messages.length ?
-                        (<MessagesList messages={messages} isShared={false} session={session} />) :
-                        (<EmptyScreen user={session} />)
-                    }
-                    <div className="h-px w-full" ref={visibilityRef} />
+        <div className='h-screen grid grid-cols-4 gap-0'>
+            <div className='col-span-3 flex flex-col'>
+                <ScrollArea className='flex-grow p-3'>
+                    <div ref={scrollRef} className="flex flex-col size-full overflow-auto justify-between">
+                        <div className={cn('flex-1 pb-[120px] overflow-auto max-h-[76vh]', className as string)} ref={messagesRef}>
+                            {messages.length ?
+                                (<MessagesList messages={messages} isShared={false} session={session} />) :
+                                (<EmptyScreen user={session} />)
+                            }
+                            <div className="h-px w-full" ref={visibilityRef} />
+                        </div>
+                        <ChatPanel id={id}
+                            input={input}
+                            session={session}
+                            setInput={setInput}
+                            isAtBottom={isAtBottom}
+                            scrollToBottom={scrollToBottom}
+                        />
+                    </div>
                 </ScrollArea>
             </div>
-            <ChatPanel id={id}
-                input={input}
-                session={session}
-                setInput={setInput}
-                isAtBottom={isAtBottom}
-                scrollToBottom={scrollToBottom}
-            />
+            <div className='col-span-1 p-3'>
+                <Metadata category='Hardware' severity='Alta' title='Mi mouse no funciona' />
+            </div>
         </div>
     )
 }

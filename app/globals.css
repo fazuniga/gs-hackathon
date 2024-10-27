@@ -98,7 +98,7 @@
     @apply pt-0 w-full mx-auto grid auto-rows-max gap-4 max-w-[400px] xs:px-0;
   }
   .messages-list {
-    @apply max-w-full md:max-w-3xl;
+    @apply max-w-full;
   }
   .message-item {
     @apply w-full;
