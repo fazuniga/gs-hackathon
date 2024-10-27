@@ -141,8 +141,7 @@ export function PromptForm({ session, input, setInput } : {
                                 className="bg-transparent shadow-none text-white rounded-full hover:bg-slate-500 bg-slate-800"
                                 aria-label="Enviar"
                             >
-                                <span className="hidden sm:block mr-2">Enviar</span>
-                                <ArrowRight />
+                                <ArrowRight className='h-4 w-4' />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>Enviar</TooltipContent>

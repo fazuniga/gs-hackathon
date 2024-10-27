@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { MessagesList } from './messages-list'
 import { ChatPanel } from './chat-panel'
 import { EmptyScreen } from './empty-screen'
+import { ScrollArea } from '../ui/scroll-area'
 // import { toast } from 'sonner'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -52,11 +53,13 @@ export function SupportChat({ id, className, session }: ChatProps) {
     return (
         <div ref={scrollRef} className="flex flex-col size-full overflow-auto justify-between">
             <div className={cn('flex-1 pb-[120px] overflow-auto max-h-[76vh]', className as string)} ref={messagesRef}>
-                {messages.length ? 
-                    (<MessagesList messages={messages} isShared={false} session={session} />) :
-                    (<EmptyScreen user={session} />)
-                }
-                <div className="h-px w-full" ref={visibilityRef} />
+                <ScrollArea className='flex-grow p-0'>
+                    {messages.length ?
+                        (<MessagesList messages={messages} isShared={false} session={session} />) :
+                        (<EmptyScreen user={session} />)
+                    }
+                    <div className="h-px w-full" ref={visibilityRef} />
+                </ScrollArea>
             </div>
             <ChatPanel id={id}
                 input={input}

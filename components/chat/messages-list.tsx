@@ -8,17 +8,17 @@ export interface ChatList {
 }
 
 export function MessagesList({ messages, session, isShared }: ChatList) {
-    return messages.length ? (
+    if (!messages.length) return null
+
+    return (
         <div className="messages-list">
-            {
-                messages.map(message => (
-                    <div className='message-item' key={message.id + nanoid()}>
-                        {message.display}
-                        {/* {message.spinner} */}
-                        {/* {message.attachments} */}
-                    </div>
-                ))
-            }
+            { messages.map(message => (
+                <div className='message-item' key={message.id + nanoid()}>
+                    {message.display}
+                    {/* {message.spinner} */}
+                    {/* {message.attachments} */}
+                </div>
+            )) }
         </div>
-    ) : null
+    )
 }

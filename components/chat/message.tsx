@@ -13,7 +13,7 @@ export function BotCard({ children, className = "" }: { children: React.ReactNod
 			<div className="flex flex-col gap-3 w-full">
 				{children}
 				<div className="flex flex-row gap-2 justify-end items-center text-xs">
-					<PlatformLogo />
+					<PlatformLogo size={30} />
 				</div>
 			</div>
 		</div>
@@ -26,7 +26,7 @@ export function UserMessage({ session, content }: { session?: any, content: stri
 			<div className="flex flex-col gap-2 w-full">
 				{ content }
 				<div className="flex flex-row gap-0 justify-end items-center text-xs">
-					{ session && <span>{ session.user.full_name }</span>}
+					{ session && <span>{ session.email }</span>}
 				</div>
 			</div>
 		</div>
@@ -45,7 +45,7 @@ export function AssistantMessage({ content, className, showAvatar = true }: {
 				
 				{ showAvatar && (
 					<div className="flex flex-row gap-2 justify-end items-center text-xs">
-						<PlatformLogo />
+						<PlatformLogo size={30} />
 					</div>
 				)}
 			</div>
@@ -94,7 +94,7 @@ export function LoadingMessage({ text = 'Espera...', className } :{
 	return (
 		<div className={cn(`loading-message bg-slate-700 text-white rounded-md shadow-md flex flex-col gap-3 whitespace-pre-wrap mb-2 animate-pulse justify-center items-center bg-gradient-to-r from-gray-100 via-white to-slate-100 p-3`, className as string)}>
 			<div className="flex flex-row gap-3 justify-center items-center text-gray-700">
-				<PlatformLogo />
+				<PlatformLogo size={20} />
 				{ text }
 			</div>
 		</div>
