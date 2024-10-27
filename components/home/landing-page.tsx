@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import HomeHeader from "./home-header"
 import Image from "next/image"
-import { features, platformName } from "@/lib/platform/config"
+import { features, platform } from "@/lib/platform/config"
 import { Routes } from "@/lib/platform/routes"
 
 export default function LandingPage() {
@@ -84,7 +84,7 @@ export default function LandingPage() {
 
                 <section className="py-20">
                     <div className="container mx-auto px-8">
-                        <h2 className="text-3xl font-bold mb-12 text-center">¿Por qué elegir {platformName}?</h2>
+                        <h2 className="text-3xl font-bold mb-12 text-center">¿Por qué elegir {platform.name}?</h2>
                         <div className="grid md:grid-cols-3 gap-8">
                             {features.map((feature, index) => (
                                 <div key={index} className={`p-6 rounded-lg ${colorTheme === 'dark' ? 'bg-gray-800' : 'bg-white shadow-lg'}`}>
@@ -101,7 +101,7 @@ export default function LandingPage() {
                     <div className="container mx-auto px-4 text-center">
                         <h2 className="text-3xl font-bold mb-6">¿Listo para transformar tu soporte al cliente?</h2>
                         <p className="text-xl mb-8 max-w-2xl mx-auto">
-                            Únete a miles de empresas que ya han mejorado su experiencia de cliente con { platformName }.
+                            Únete a miles de empresas que ya han mejorado su experiencia de cliente con { platform.name }.
                         </p>
                         <Link href={Routes.LOGIN}>
                             <Button className={`${currentTheme.primary} text-xl p-8 rounded-xl`}>Comienza aquí</Button>
@@ -113,8 +113,8 @@ export default function LandingPage() {
 
             <footer className={`${colorTheme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'} py-8`}>
                 <div className="container mx-auto px-4 text-center flex flex-col gap-2">
-                    <p>&copy; {new Date().getFullYear()} · SupportHub</p>
-                    <p>All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} · { platform.name }</p>
+                    <p>Todos los derechos reservados</p>
                 </div>
             </footer>
         </div>

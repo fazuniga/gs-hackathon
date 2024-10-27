@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const CODEGPT_API_URL = 'https://api.codegpt.co/api/v1/chat/completions'
-
 export async function POST(request: Request) {
     const { messages } = await request.json()
-
     try {
-        const response = await fetch(CODEGPT_API_URL, {
+        const response = await fetch(process.env.CODEGPT_API_URL ?? '', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

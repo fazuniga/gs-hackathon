@@ -26,7 +26,7 @@ const modelInstanceOpenAI = openai('gpt-4o')
 async function submitUserMessage(content: string) {
 	"use server";
 	const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+	const { data: { user } } = await supabase.auth.getUser();
 
 	const aiState = getMutableAIState<typeof AI>();
 
@@ -63,6 +63,51 @@ async function submitUserMessage(content: string) {
 			return <AssistantMessage content={content.trim()} />
 		},
 		tools: {
+			problemCategory: {
+				description: 'Utiliza esta herramienta para determinar la categoría del problema que describe el usuario.\
+				Ejemplos de categorías puede ser: Hardware, Software, Problemas de Red, entre otros',
+				parameters: z.object({
+					problem: z.string().describe('La descripción del problema entregada por el usuario')
+				}).required(),
+				generate: async function* ({ problem }) {
+					yield <LoadingMessage text={`Buscando...`} />
+
+					const response = await fetch(process.env.CODEGPT_API_URL, {
+						method: 'POST',
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${process.env.CODEGPT_API_KEY}`,
+						},
+						body: JSON.stringify({
+							agentId: `${process.env.CODEGPT_AGENT_ID}`,
+							messages: aiState.get().messages,
+							stream: true,
+						}),
+					})
+
+					const data = await response.json()
+
+					console.log(data)
+
+					aiState.done({
+						...aiState.get(),
+						messages: [
+							...aiState.get().messages,
+							{
+								role: 'assistant',
+								content: `Problema Descrito: ${problem}`
+							},
+						]
+					})
+
+					return (
+						<BotCard>
+							<div className="text-red-300">Problema: {problem}</div>
+						</BotCard>
+					)
+				}
+			}
 			// createSuggestion: {
 			// 	description: `Utiliza esta herramienta cada vez que necesites dar sugerencias
 			// 	al usuario de pasos que puede seguir para solucionar su problema de su mouse`.trim(),
@@ -73,9 +118,9 @@ async function submitUserMessage(content: string) {
 			// 	}).required(),
 			// 	generate: async function* ({ suggestion }) {
 			// 		yield <LoadingMessage text={`Buscando...`} />
-// 
+			// 
 			// 		console.log(suggestion);
-// 
+			// 
 			// 		aiState.done({
 			// 			...aiState.get(),
 			// 			messages: [
@@ -86,7 +131,7 @@ async function submitUserMessage(content: string) {
 			// 				},
 			// 			]
 			// 		})
-// 
+			// 
 			// 		return (
 			// 			<BotCard>
 			// 				<div className="text-red-300">Sugerencia: {suggestion}</div>

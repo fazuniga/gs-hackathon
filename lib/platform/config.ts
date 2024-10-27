@@ -1,7 +1,11 @@
 import { Translations } from "@/components/dashboard/dashboard";
 import { BarChart, MessageCircle, Users } from "lucide-react";
 
-export const platformName = "SupportHub";
+export const platform = {
+  name: 'eyeT',
+  githubURL: 'https://github.com/fazuniga/gs-hackathon',
+  presoURL: 'https://docs.google.com/presentation/d/1W6nXt4saOSeVR9OLsrPZaigwJocIxswe5HYfEoh93Ec/edit#slide=id.p'
+}
 
 export const features = [
   {
