@@ -20,14 +20,14 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarHeader,
-    SidebarMenuItem,
-    SidebarMenu,
-    SidebarTrigger,
-} from '@/components/ui/sidebar'
+// import {
+//     Sidebar,
+//     SidebarContent,
+//     SidebarHeader,
+//     SidebarMenuItem,
+//     SidebarMenu,
+//     SidebarTrigger,
+// } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
 import { ThemeSwitcher } from '../theme-switcher'
 
@@ -116,19 +116,6 @@ export default function Dashboard() {
 
     return (
         <div className="flex h-screen bg-background">
-            <Sidebar>
-                <SidebarHeader>
-                    <h1 className="text-xl font-bold p-4">GuruSup</h1>
-                </SidebarHeader>
-                <SidebarContent>
-                    <SidebarMenu>
-                        <SidebarMenuItem>{t.inbox}</SidebarMenuItem>
-                        <SidebarMenuItem>{t.templates}</SidebarMenuItem>
-                        <SidebarMenuItem>{t.settings}</SidebarMenuItem>
-                    </SidebarMenu>
-                </SidebarContent>
-            </Sidebar>
-
             <div className="flex-1 flex flex-col overflow-hidden">
                 <header className="bg-background border-b">
                     <div className="flex items-center justify-between px-4 py-3">
