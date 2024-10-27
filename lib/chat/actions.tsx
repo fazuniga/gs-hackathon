@@ -59,53 +59,43 @@ async function submitUserMessage(content: string) {
 					],
 				});
 			}
+			console.log(aiState.get().messages)
 			return <AssistantMessage content={content.trim()} />
 		},
 		tools: {
-			createSuggestion: {
-				description: `Utiliza esta herramienta cada vez que necesites dar sugerencias
-				al usuario de pasos que puede seguir para solucionar su problema de su mouse`.trim(),
-				parameters: z.object({
-					suggestion: z
-						.string()
-						.describe("La sugerencia entregada hasta ahora por el experto IT")
-				}).required(),
-				generate: async function* ({ suggestion }) {
-					yield <LoadingMessage text={`Buscando...`} />
-
-					console.log(suggestion);
-
-					aiState.done({
-						...aiState.get(),
-						messages: [
-							...aiState.get().messages,
-							{
-								role: 'assistant',
-								content: `Mostrando información: ${suggestion}`
-							},
-						]
-					})
-
-					return (
-						<BotCard>
-							<div className="text-red-300">Sugerencia: {suggestion}</div>
-						</BotCard>
-					)
-				}
-			},
+			// createSuggestion: {
+			// 	description: `Utiliza esta herramienta cada vez que necesites dar sugerencias
+			// 	al usuario de pasos que puede seguir para solucionar su problema de su mouse`.trim(),
+			// 	parameters: z.object({
+			// 		suggestion: z
+			// 			.string()
+			// 			.describe("La sugerencia entregada hasta ahora por el experto IT")
+			// 	}).required(),
+			// 	generate: async function* ({ suggestion }) {
+			// 		yield <LoadingMessage text={`Buscando...`} />
+// 
+			// 		console.log(suggestion);
+// 
+			// 		aiState.done({
+			// 			...aiState.get(),
+			// 			messages: [
+			// 				...aiState.get().messages,
+			// 				{
+			// 					role: 'assistant',
+			// 					content: `Mostrando información: ${suggestion}`
+			// 				},
+			// 			]
+			// 		})
+// 
+			// 		return (
+			// 			<BotCard>
+			// 				<div className="text-red-300">Sugerencia: {suggestion}</div>
+			// 			</BotCard>
+			// 		)
+			// 	}
+			// },
 		},
 	})
-
-	aiState.done({
-		...aiState.get(),
-		messages: [
-			...aiState.get().messages,
-			{
-				role: "assistant",
-				content: content.trim(),
-			},
-		],
-	});
 
 	return {
 		display: ui.value
