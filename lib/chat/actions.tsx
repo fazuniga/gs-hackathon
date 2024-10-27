@@ -43,11 +43,16 @@ async function submitUserMessage(content: string) {
 		],
 	});
 
+	const MIN_MESSAGES = 4
+	let category = null
+	let severity = null
+
 	const ui = await streamUI({
+		// model: modelInstanceMistral,
 		model: modelInstanceOpenAI,
 		system: SYSTEM_MESSAGE,
 		messages: aiState.get().messages.filter(m => m.role !== 'function'),
-		text: ({ content, done }) => {
+		text: async ({ content, done }) => {
 			if (done) {
 				aiState.done({
 					...aiState.get(),
@@ -59,87 +64,95 @@ async function submitUserMessage(content: string) {
 						},
 					],
 				});
+
+				if (aiState.get().messages.slice(0, -1).length >= MIN_MESSAGES && !category && !severity) {
+					const category = await getCategoryFromAgent(aiState.get().messages.filter(m => m.role === 'user'))
+					const severity = await getSeverityFromAgent(aiState.get().messages.filter(m => m.role === 'user'))
+					const severityLevel = severity.split(" / ")[0]
+	
+					return <AssistantMessage category={category} severity={severityLevel} content={content.trim()} />
+				}
 			}
 			return <AssistantMessage content={content.trim()} />
 		},
 		tools: {
-			problemCategory: {
-				description: 'Utiliza esta herramienta para determinar la categoría del problema que describe el usuario.\
-				Ejemplos de categorías puede ser: Hardware, Software, Problemas de Red, entre otros',
-				parameters: z.object({
-					problem: z.string().describe('La descripción del problema entregada por el usuario')
-				}).required(),
-				generate: async function* ({ problem }) {
-					yield <LoadingMessage text={`Estableciendo la categoría..`} />
+			// problemCategory: {
+			// 	description: 'Utiliza esta herramienta para determinar la categoría del problema que describe el usuario.\
+			// 	Ejemplos de categorías puede ser: Hardware, Software, Problemas de Red, entre otros',
+			// 	parameters: z.object({
+			// 		problem: z.string().describe('La descripción del problema entregada por el usuario')
+			// 	}).required(),
+			// 	generate: async function* ({ problem }) {
+			// 		yield <LoadingMessage text={`Estableciendo la categoría..`} />
 
-					const category = await getCategoryFromAgent(aiState.get().messages)
+			// 		const category = await getCategoryFromAgent(aiState.get().messages)
 
-					aiState.update({
-						...aiState.get(),
-						messages: [
-							...aiState.get().messages,
-							{
-								role: 'assistant',
-								content: `Problema: ${problem} - Categoría: ${category}`
-							},
-						]
-					})
+			// 		aiState.update({
+			// 			...aiState.get(),
+			// 			messages: [
+			// 				...aiState.get().messages,
+			// 				{
+			// 					role: 'assistant',
+			// 					content: `Problema: ${problem} - Categoría: ${category}`
+			// 				},
+			// 			]
+			// 		})
 
-					return (
-						<BotCard>
-							<div className="flex flex-col gap-2 items-center justify-start">
-								<div className="flex flex-row gap-2 items-center">
-									<span className="font-semibold">Problema</span>
-									<span className="font-normal">{problem}</span>
-								</div>
-								<Badge variant={"outline"}>
-									Categoría: {category}
-								</Badge>
-							</div>
-						</BotCard>
-					)
-				}
-			},
-			problemSeverity: {
-				description: 'Utiliza esta herramienta para determinar la severidad del problema que describe el usuario.\
-				Ejemplos de severidad puede ser: 1/Bajo impacto, entre otros',
-				parameters: z.object({
-					problem: z.string().describe('La descripción del problema entregada por el usuario')
-				}).required(),
-				generate: async function* ({ problem }) {
-					yield <LoadingMessage text={`Estableciendo la severidad...`} />
+			// 		return (
+			// 			<BotCard>
+			// 				<div className="flex flex-col gap-2 items-center justify-start">
+			// 					<div className="flex flex-row gap-2 items-center">
+			// 						<span className="font-semibold">Problema</span>
+			// 						<span className="font-normal">{problem}</span>
+			// 					</div>
+			// 					<Badge variant={"outline"} className={cn('bg-white')}>
+			// 						Categoría: {category}
+			// 					</Badge>
+			// 				</div>
+			// 			</BotCard>
+			// 		)
+			// 	}
+			// },
+			// problemSeverity: {
+			// 	description: 'Utiliza esta herramienta para determinar la severidad del problema que describe el usuario.\
+			// 	Ejemplos de severidad puede ser: 1/Bajo impacto, entre otros',
+			// 	parameters: z.object({
+			// 		problem: z.string().describe('La descripción del problema entregada por el usuario')
+			// 	}).required(),
+			// 	generate: async function* ({ problem }) {
+			// 		yield <LoadingMessage text={`Estableciendo la severidad...`} />
 
-					const severity = await getSeverityFromAgent(aiState.get().messages)
-					const severityLevel = severity.split(" / ")[0]
-					const severityDescription = severity.split(" / ")[1]
+			// 		const severity = await getSeverityFromAgent(aiState.get().messages)
+			// 		const severityLevel = severity.split(" / ")[0]
+			// 		const severityDescription = severity.split(" / ")[1]
 
-					aiState.update({
-						...aiState.get(),
-						messages: [
-							...aiState.get().messages,
-							{
-								role: 'assistant',
-								content: `Problema: ${problem} - Severity: ${severity}`
-							},
-						]
-					})
+			// 		aiState.update({
+			// 			...aiState.get(),
+			// 			messages: [
+			// 				...aiState.get().messages,
+			// 				{
+			// 					role: 'assistant',
+			// 					content: `Problema: ${problem} - Severity: ${severity}`
+			// 				},
+			// 			]
+			// 		})
 
-					return (
-						<BotCard>
-							<div className="flex flex-col gap-2 items-center justify-start">
-								<div className="flex flex-row gap-2 items-center">
-									<span className="font-semibold">Problema</span>
-									<span className="font-normal">{problem}</span>
-								</div>
-								<span>{ severityDescription }</span>
-								<Badge variant={"outline"} className={cn('bg-white', severityLevel <= 2 ? 'bg-green-400' : 'bg-orange-400')}>
-									Severidad: NIVEL {severityLevel}
-								</Badge>
-							</div>
-						</BotCard>
-					)
-				}
-			},
+			// 		return (
+			// 			<BotCard>
+			// 				<div className="flex flex-col gap-2 items-center justify-start">
+			// 					<div className="flex flex-row gap-2 items-center">
+			// 						<span className="font-semibold">Problema</span>
+			// 						<span className="font-normal">{problem}</span>
+			// 					</div>
+			// 					<span>{ severityDescription }</span>
+			// 					<Badge variant={"outline"} className={cn('bg-white', severityLevel <= 2 ? 'bg-green-400' : 'bg-orange-400')}>
+			// 						Severidad: NIVEL {severityLevel}
+			// 					</Badge>
+			// 				</div>
+			// 			</BotCard>
+			// 		)
+			// 	}
+			// },
 		},
 	})
 

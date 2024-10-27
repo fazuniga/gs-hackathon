@@ -6,6 +6,18 @@ import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import { cn } from "@/lib/utils"
 import PlatformLogo from "../logo"
+import { Badge } from "../ui/badge"
+
+function getSeverityColor(severity: string): string {
+	const level = parseInt(severity.replaceAll("*", ""), 10);
+	if (level < 0 || level > 5) return 'bg-gray-400'; // Default color for out of range
+	if (level === 0) return 'bg-green-500 text-white';
+	if (level === 1) return 'bg-yellow-300 text-black';
+	if (level === 2) return 'bg-yellow-500 text-black';
+	if (level === 3) return 'bg-orange-500';
+	if (level === 4) return 'bg-red-300 text-white';
+	return 'bg-red-500'; // For level 5
+}
 
 export function BotCard({ children, className = "" }: { children: React.ReactNode, className: string }) {
 	return (
@@ -33,21 +45,25 @@ export function UserMessage({ session, content }: { session?: any, content: stri
 	)
 }
 
-export function AssistantMessage({ content, className, showAvatar = true }: {
+export function AssistantMessage({ content, className, category = "", severity = ""
+ }: {
 	content: string | StreamableValue<string>
 	className?: string
-	showAvatar?: boolean
+	category?: string
+	severity?: string
 }) {
 	return (
 		<div className={cn('chat-message assistant flex items-start', className as string)}>
 			<div className="flex flex-col gap-3 w-full">
 				<AssistantMessageContent content={content} />
 				
-				{ showAvatar && (
-					<div className="flex flex-row gap-2 justify-end items-center text-xs">
-						<PlatformLogo size={30} />
+				<div className="flex flex-row gap-2 justify-end items-center text-xs">
+					<div className="mr-auto flex flex-row gap-2 items-center">
+						{ category && <Badge variant={'outline'} className="bg-yellow-500 mr-auto">{ category }</Badge>}
+						{ severity && <Badge variant={'outline'} className={`${getSeverityColor(severity)} text-white mr-auto`}>Gravedad { severity.replace("*", "") }</Badge>}
 					</div>
-				)}
+					<PlatformLogo size={30} />
+				</div>
 			</div>
 		</div>
 	)
@@ -72,7 +88,7 @@ export function AssistantMessageContent({ content }: {
 					return <ol className="list-none flex flex-col gap-2">{children}</ol>
 				},
 				li({ children }) {
-					return <li className="p-3 bg-slate-900 text-white rounded-md shadow-md">{children}</li>
+					return <li className="p-3 bg-blue-200 text-black rounded-md shadow-md">{children}</li>
 				},
 				a({ children, ...props }) {
 					return <a {...props} target="_blank" className="font-bold underline">{children}</a>
