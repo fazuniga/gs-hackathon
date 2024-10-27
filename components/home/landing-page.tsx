@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon, MessageCircle, BarChart, Users, ArrowRight } from "lucide-react"
 import HomeHeader from "./home-header"
 import Image from "next/image"
 import { features, platformName } from "@/lib/platform/config"

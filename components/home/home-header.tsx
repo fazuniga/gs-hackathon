@@ -4,6 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { platformName } from "@/lib/platform/config";
 import { Routes } from "@/lib/platform/routes";
+import Image from "next/image";
 
 export default function HomeHeader({ currentTheme, setColorTheme } : {
     currentTheme: any
@@ -11,7 +12,10 @@ export default function HomeHeader({ currentTheme, setColorTheme } : {
 }) {
     return (
         <header className="container mx-auto px-4 py-6 flex justify-between items-center">
-            <div className="text-2xl font-bold">{ platformName }</div>
+            <div className="flex flex-row items-center gap-2">
+                <div className="text-2xl font-bold">{ platformName }</div>
+                <Image src={"/images/logo.png"} height={50} width={50} className="rounded-full p-2" alt="Logo" />
+            </div>
             <nav className="flex flex-row items-center">
                 <div className="hidden md:flex flex-row items-center gap-2">
                     <Button variant="ghost" onClick={() => setColorTheme('light')} 
