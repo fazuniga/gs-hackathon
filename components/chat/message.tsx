@@ -60,7 +60,7 @@ export function AssistantMessage({ content, className, category = "", severity =
 				<div className="flex flex-row gap-2 justify-end items-center text-xs">
 					<div className="mr-auto flex flex-row gap-2 items-center">
 						{ category && <Badge variant={'outline'} className="bg-yellow-500 mr-auto">{ category }</Badge>}
-						{ severity && <Badge variant={'outline'} className={`${getSeverityColor(severity)} text-white mr-auto`}>Gravedad { severity.replace("*", "") }</Badge>}
+						{ severity && <Badge variant={'outline'} className={`${getSeverityColor(severity)} mr-auto`}>Gravedad { severity.replaceAll("*", "") }</Badge>}
 					</div>
 					<PlatformLogo size={30} />
 				</div>

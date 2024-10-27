@@ -15,10 +15,8 @@ import { cn, nanoid } from "@/lib/utils";
 import { SYSTEM_MESSAGE } from "../config";
 import { BotCard, AssistantMessage, LoadingMessage, UserMessage } from "@/components/chat/message";
 // import { getVehicleStatus, getBookingInfo, getVehicleDetail, getDriverProfile, searchDriver, getDriverRatings, getBookings, getZonaIluminadaServices } from "./functions";
-// import { VehicleStatusSearch } from "@/components/chat/search/vehicle-status-search";
 import { generateText } from "ai";
-import { useSupabaseUser } from "@/hooks/use-supabase-user";
-import { createClient } from '@/utils/supabase/server'; // Import the createClient function from the correct path
+import { createClient } from '@/utils/supabase/server';
 import { getCategoryFromAgent, getSeverityFromAgent } from "./functions";
 import { Badge } from "@/components/ui/badge";
 
