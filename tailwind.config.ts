@@ -96,7 +96,8 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       backgroundImage: {
-        'customer': 'url("/images/customer_support.jpg")'
+        'customer': 'url("/images/customer_support.jpg")',
+        'laptop': 'url("/images/laptop.jpg")',
       }
     },
   },
