@@ -39,11 +39,43 @@ export function SupportChat({ id, className, session }: ChatProps) {
     }, [id, path, session?.user, messages])
 
     useEffect(() => {
-        const messagesLength = aiState.messages?.length
+        const messagesLength = messages?.length
         if (messagesLength === 2) {
             router.refresh()
         }
     }, [aiState.messages, router])
+
+    useEffect(() => {
+        const messagesLength = messages?.length
+        if (messagesLength >= 3) {
+            const postCategoryData = async () => {
+                try {
+                    const response = await fetch('/api/category', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            messages: messages.filter((m:any) => m.role === 'user')
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to post category data');
+                    }
+
+                    const data = await response.json();
+                    console.log('Category data posted successfully:', data);
+                } catch (error) {
+                    console.error('Error posting category data:', error);
+                    // Consider using a toast notification here instead of console.error
+                    // toast.error('Failed to post category data');
+                }
+            };
+
+            postCategoryData();
+        }
+    }, [messages])
 
     useEffect(() => {
         setNewChatId(id)
