@@ -1,3 +1,43 @@
+# LLMHackathon Oct 2024
+![Portada](./imgs/portada.png)
+
+¡Bienvenido a LLMHackathon! Este repositorio contiene el código para el proyecto del hackathon, cuyo objetivo es construir una aplicación web utilizando Next.js y Supabase. El proyecto está diseñado para ser un kit de inicio completo que se puede personalizar y ampliar fácilmente para satisfacer tus necesidades específicas.
+
+## Recursos
+- [Demo](https://hackathon-challenge-five.vercel.app/)
+- [Presentación en Google Drive](https://docs.google.com/presentation/d/1W6nXt4saOSeVR9OLsrPZaigwJocIxswe5HYfEoh93Ec/edit?usp=sharing)
+
+## Problema
+- Un ticket tradicional asíncrono genera mucha ansiedad en el usuario al esperar soluciones.
+- Áreas de IT con muy alta demanda normalmente y gran variabilidad de tareas.
+
+## Oportunidad
+70% de tickets que recibe un helpdesk de IT en un entorno corporativo son problemas de fácil solución (L1).
+
+Estos incluyen problemas comunes como 
+- Reinicio de contraseñas
+- Configuración de correo
+- Soporte con periféricos.
+
+La mayoría de estas incidencias se pueden resolver rápidamente, generalmente en el primer contacto con el soporte técnico.
+
+## Solución
+- ‘guruSup’ para tickets internos de consultas a soporte IT.
+- Cambiamos del concepto de ticket a conversación.
+   - Una conversación se puede retomar.
+   - Una conversación no depende del medio.
+- Ofrece soporte en vivo paso a paso.
+- Disminuye frustración por el “transfiero a otra área” , tiempo de espera o tiempos lentos de respuesta.
+
+## Flujo
+![Flujo](./imgs/flujo.png)
+
+## Esquema de Componentes
+![Componentes](./imgs/componentes.png)
+
+## DataBase
+![DataBase](./imgs/database.png)
+
 # SupportHub: Next.js and Supabase Starter Kit
 
 Welcome to SupportHub, a robust starter kit designed to accelerate your development process with Next.js and Supabase. This project is the fastest way to build modern web applications, leveraging the power of Next.js's App Router and Supabase's real-time capabilities.
